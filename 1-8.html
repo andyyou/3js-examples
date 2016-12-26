@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script src="javascripts/three.js"></script>
+  <title>Three.js</title>
+  <style>
+  body {
+    margin: 0;
+  }
+  #canvas-frame {
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    height: 800px;
+    background-color: #eee;
+  }
+  </style>
+</head>
+<body>
+  <div>
+    FOV: <input type="text" value="45" id="fov">
+  </div>
+  <div id="canvas-frame"></div>
+
+  <script>
+
+  var renderer, width, height, canvas
+  function initThree () {
+    canvas = document.getElementById('canvas-frame')
+    width = canvas.clientWidth
+    height = canvas.clientHeight
+    renderer = new THREE.WebGLRenderer({
+      antialias: true
+    })
+    renderer.setSize(width, height)
+    canvas.appendChild(renderer.domElement)
+    renderer.setClearColor(0xffffff, 1.0)
+  }
+
+  var camera
+  function initCamera () {
+    console.log('width', width, 'height', height)
+    camera = new THREE.PerspectiveCamera(45, width/height, 1, 10000)
+    camera.position.x = 600
+    camera.position.y = 600
+    camera.position.z = 600
+    camera.lookAt({
+      x: 0,
+      y: 0,
+      z: 0
+    })
+  }
+
+  var scene
+  function initScene () {
+    scene = new THREE.Scene()
+  }
+
+  var light
+  function initLight () {
+    // light = new THREE.AmbientLight(0xff0000)
+    // light.position.set(100, 100, 200)
+    // scene.add(light)
+
+    // light = new THREE.PointLight(0x00ff00, 1.0, 400)
+    // light.position.set(0, 0, 300)
+    // scene.add(light)
+
+    // light = new THREE.SpotLight(0x00ff00, 1.0, 400, 0.75, 1)
+    // light.position.set(0, 300, 300)
+    // scene.add(light)
+
+    light = new THREE.DirectionalLight(0xff0000, 1)
+    light.position.set(1000, 0, 0)
+    scene.add(light)
+
+  }
+
+  function initObjects () {
+    // 322px
+    var geometry = new THREE.CylinderGeometry(70, 150, 200)
+    var material = new THREE.MeshLambertMaterial({
+      color: 0xffff00
+    })
+    var mesh = new THREE.Mesh(geometry, material)
+    mesh.position = new THREE.Vector3(0, 100, 100)
+    scene.add(mesh)
+  }
+
+  function animation () {
+    changeFov()
+    renderer.render(scene, camera)
+    requestAnimationFrame(animation)
+  }
+
+  function setCameraFov (fov) {
+    camera.fov = fov
+    camera.updateProjectionMatrix()
+  }
+
+  function changeFov () {
+    var fov = +document.getElementById('fov').value
+    setCameraFov(fov)
+  }
+
+  function start () {
+    initThree()
+    initCamera()
+    initScene()
+    initLight()
+    initObjects()
+    animation()
+  }
+
+  window.addEventListener('load', function () {
+    start()
+  })
+  </script>
+</body>
+</html>

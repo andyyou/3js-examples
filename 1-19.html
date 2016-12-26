@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script src="javascripts/three.js"></script>
+  <script src="javascripts/detector.js"></script>
+  <script src="javascripts/stats.js"></script>
+  <script src="javascripts/vtk-loader.js"></script>
+  <script src="javascripts/trackball-controls.js"></script>
+  <title>Three.js</title>
+  <style>
+  html, body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+  }
+  </style>
+</head>
+<body>
+  <script>
+  var renderer, camera, scene, light, stats, controls
+
+  function init () {
+    stats = new Stats()
+    document.body.appendChild(stats.dom)
+
+    renderer = new THREE.WebGLRenderer()
+    renderer.setSize(window.innerWidth, window.innerHeight)
+    renderer.setClearColor(0xcccccc, 1)
+    document.body.appendChild(renderer.domElement)
+
+    camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.01, 1e10)
+    camera.position.z = 0.2
+    camera.position.y = -0.1
+
+    scene = new THREE.Scene()
+    scene.add(camera)
+
+    controls = new THREE.TrackballControls(camera)
+    controls.rotateSpeed = 5.0
+    controls.zoomSpeed = 5.0
+    controls.panSpeed = 2.0
+    controls.noZoom = false
+    controls.noPan = false
+    controls.staticMoving = true
+    controls.dynamicDampingFactor = 0.3
+
+    light = new THREE.DirectionalLight(0xffffff, 1)
+    light.position.set(-0.01, -0.1, 1).normalize()
+    camera.add(light)
+    camera.add(light.target)
+    
+    // var geometry = new THREE.BoxGeometry(100, 100, 100)
+    // var material = new THREE.MeshLambertMaterial({
+    //   color: 0x0000ff,
+    //   side: THREE.DoubleSide
+    // })
+    //
+    // var mesh = new THREE.Mesh(geometry, material)
+    // mesh.position = new THREE.Vector3(0, 0, 0)
+    // scene.add(mesh)
+
+    var material = new THREE.MeshPhongMaterial({
+      color: 0x0000ff,
+      shading: THREE.FlatShading,
+      side: THREE.FrontSide
+    })
+
+    var loader = new THREE.VTKLoader()
+    loader.load('models/bunny.vtk', function (content) {
+      console.log('loaded', content)
+      var geometry = content
+      var mesh = new THREE.Mesh(geometry, material)
+      mesh.position.setY(-0.09)
+      scene.add(mesh)
+      console.log(mesh)
+      render()
+    })
+  }
+
+  function animate () {
+    requestAnimationFrame(animate)
+    controls.update()
+    render()
+    stats.update()
+  }
+
+  function render () {
+    renderer.render(scene, camera)
+  }
+
+  window.addEventListener('load', function () {
+    init()
+    animate()
+  })
+  </script>
+</body>
+</html>

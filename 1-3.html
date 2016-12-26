@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script src="javascripts/three.js"></script>
+  <title>Three.js</title>
+  <style>
+    body {
+      margin: 0;
+    }
+
+    #canvas-frame {
+      border: none;
+      cursor: pointer;
+      width: 100%;
+      height: 600px;
+      background: #eee;
+    }
+  </style>
+</head>
+<body>
+  <div id="canvas-frame"></div>
+
+  <script>
+  var renderer, width, height
+
+  function initThree () {
+    var canvas = document.getElementById('canvas-frame')
+    width = canvas.clientWidth
+    height = canvas.clientHeight
+    renderer = new THREE.WebGLRenderer()
+    renderer.setSize(width, height)
+    renderer.setClearColor(0xffffff, 1.0)
+    canvas.appendChild(renderer.domElement)
+    console.log('inited three')
+  }
+
+  var camera
+  function initCamera () {
+    camera = new THREE.PerspectiveCamera(70, width / height, 1, 10000)
+    camera.position.x = 0
+    camera.position.y = 0
+    camera.position.z = 10
+    camera.lookAt({
+      x : 0,
+      y : 0,
+      z : 0
+    })
+    console.log('inited camera')
+  }
+
+  var scene
+  function initScene () {
+    scene = new THREE.Scene()
+    console.log('inited scene')
+  }
+
+  var light
+  function initLight () {
+    light = new THREE.DirectionalLight(0x000000, 1.0, 0)
+    light.position.set(100, 100, 200)
+    scene.add(light)
+    console.log('inited light')
+  }
+
+  var cube
+  function initObjects () {
+    var geometry = new THREE.Geometry()
+    var material = new THREE.LineBasicMaterial({
+      vertexColors: THREE.VertexColors,
+      linewidth: 10
+    });
+    var color1 = new THREE.Color( 0xeeeeee )
+    var color2 = new THREE.Color( 0xff0000 )
+
+    var p1 = new THREE.Vector3( 0, 0, 0 )
+    var p2 = new THREE.Vector3(  100, 0, 0 )
+    geometry.vertices.push(p1)
+    geometry.vertices.push(p2)
+    geometry.colors.push(color1, color2)
+
+    var line = new THREE.Line(geometry, material)
+    scene.add(line)
+    console.log('inited objects')
+  }
+
+  function render () {
+    requestAnimationFrame(render)
+    renderer.render(scene, camera)
+  }
+
+  function start () {
+    initThree()
+    initCamera()
+    initScene()
+    initLight()
+    initObjects()
+    render()
+  }
+
+  window.addEventListener('load', function () {
+    start()
+  })
+  </script>
+</body>
+</html>

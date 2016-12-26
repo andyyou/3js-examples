@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css" integrity="sha384-AysaV+vQoT3kOAXZkl02PThvDr8HYKPZhNT5h/CXfBThSRXQ6jW5DO2ekP5ViFdi" crossorigin="anonymous">
+
+  <script src="javascripts/three.js"></script>
+  <script src="javascripts/detector.js"></script>
+  <script src="javascripts/stats.js"></script>
+  <script src="javascripts/dds-loader.js"></script>
+  <script src="javascripts/mtl-loader.js"></script>
+  <script src="javascripts/obj-loader.js"></script>
+  <script src="javascripts/trackball-controls.js"></script>
+  <title>Three.js</title>
+  <style>
+  html, body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  #product {
+    width: 100%;
+    height: 400px;
+    position: relative;
+  }
+
+  a:hover {
+    text-decoration: none;
+  }
+
+  .img {
+    width: 60px;
+    height: 60px;
+  }
+
+  .container {
+    margin-top: 15px;
+  }
+  </style>
+</head>
+<body>
+  <div class="navbar navbar-dark bg-inverse">
+    <div class="container">
+      <a href="#" class="navbar-brand">Helmet</a>
+      <ul class="nav navbar-nav">
+        <li><a href="#" class="nav-link">About</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-6">
+        <div id="product"></div>
+      </div>
+      <div class="col-xs-6">
+        <a data-path="2.jpg" href="#">
+          <img src="textures/2.jpg" class="img img-thumbnail">
+        </a>
+        <a data-path="3.jpg" href="#">
+          <img src="textures/3.jpg" class="img img-thumbnail">
+        </a>
+        <a data-path="4.jpg" href="#">
+          <img src="textures/4.jpg" class="img img-thumbnail">
+        </a>
+        <a data-path="uv-grid.jpg" href="#">
+          <img src="textures/uv-grid.jpg" class="img img-thumbnail">
+        </a>
+      </div>
+    </div>
+  </div>
+  <script>
+  var container, renderer, camera, scene, light, stats, controls, model
+
+  var width, height
+
+  var url
+  function init () {
+    if (window.location.hostname === 'localhost') {
+      url = window.location.protocol + '//' + window.location.host
+    } else {
+      url = window.location.protocol + '//' + window.location.host + 'threejs-examples/'
+    }
+    stats = new Stats()
+
+    container = document.getElementById('product')
+    container.appendChild(stats.dom)
+    width = container.clientWidth
+    height = container.clientHeight
+    window.addEventListener('resize', onResize, false)
+
+    renderer = new THREE.WebGLRenderer()
+    renderer.setPixelRatio(window.devicePixelRatio)
+    renderer.setSize(width, height)
+    renderer.setClearColor(0xeeeeee, 1)
+    container.appendChild(renderer.domElement)
+
+    camera = new THREE.PerspectiveCamera(45, width/height, 1, 1e10)
+    camera.position.z = 10000
+
+    scene = new THREE.Scene()
+    scene.add(camera)
+
+    controls = new THREE.TrackballControls(camera)
+    controls.rotateSpeed = 5.0
+    controls.zoomSpeed = 5.0
+    controls.panSpeed = 2.0
+    controls.noZoom = false
+    controls.noPan = false
+    controls.staticMoving = true
+    controls.dynamicDampingFactor = 0.3
+
+    var ambient = new THREE.AmbientLight(0x555555)
+    scene.add(ambient)
+    light = new THREE.DirectionalLight(0xffffff, 1)
+    light.position.set(0, 0, 1).normalize()
+    camera.add(light)
+    camera.add(light.target)
+
+    var manager = new THREE.LoadingManager()
+    var mtlLoader = new THREE.MTLLoader()
+
+    mtlLoader.setPath('models/helmet/')
+    mtlLoader.load('helmet.mtl', function (materials) {
+      materials.preload()
+      var objLoader = new THREE.OBJLoader(manager)
+      objLoader.setMaterials(materials)
+
+      objLoader.setPath('models/helmet/')
+      objLoader.load('helmet.obj', function (object) {
+        model = object
+        object.position.y = -95
+        object.traverse(function (child) {
+          if (child instanceof THREE.Mesh) {
+            var texture = (new THREE.TextureLoader()).load('textures/uv-grid.jpg')
+            child.material.map = texture
+            child.material.needsUpdate = true
+          }
+        })
+        scene.add(model)
+        render()
+      }, function (xhr) {
+        if (xhr.lengthComputable) {
+          var percent = xhr.loaded / xhr.total * 100
+          console.log(Math.round(percent, 2) + '% completed')
+        }
+      }, function (xhr) {
+        console.error(xhr)
+      })
+    })
+  }
+
+  function changeTexture (path) {
+    model.traverse(function (child) {
+      if (child instanceof THREE.Mesh) {
+        child.material.map = (new THREE.TextureLoader()).load('textures/' + path)
+        child.material.needsUpdate = true
+      }
+    })
+    render()
+  }
+
+  function onResize () {
+    width = container.clientWidth
+    height = container.clientHeight
+    camera.aspect = width / height
+    camera.updateProjectionMatrix()
+    renderer.setSize(width, height)
+  }
+
+  function animate () {
+    requestAnimationFrame(animate)
+    if (model) {
+      model.rotation.y += .005
+    }
+
+    controls.update()
+    render()
+    stats.update()
+  }
+
+  function render () {
+    renderer.render(scene, camera)
+  }
+
+  window.addEventListener('load', function () {
+    init()
+    animate()
+
+  })
+
+  ;[].forEach.call(document.querySelectorAll('a'), function (a) {
+    a.addEventListener('click', function (e) {
+      e.preventDefault()
+
+      var path = e.currentTarget.getAttribute('data-path')
+      console.log('clicked', path)
+      changeTexture(path)
+    }, false)
+  })
+
+  </script>
+</body>
+</html>

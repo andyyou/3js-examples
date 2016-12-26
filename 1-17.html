@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script src="javascripts/three.js"></script>
+  <script src="javascripts/detector.js"></script>
+  <script src="javascripts/stats.js"></script>
+  <script src="javascripts/vtk-loader.js"></script>
+  <script src="javascripts/trackball-controls.js"></script>
+  <title>Three.js</title>
+  <style>
+  body {
+    margin: 0;
+  }
+  </style>
+</head>
+<body>
+  <script>
+  if (!Detector.webgl) {
+    Detector.addGetWebGLMessage()
+  }
+
+  var container,
+      stats,
+      camera,
+      controls,
+      scene,
+      light,
+      renderer,
+      cross
+
+  window.addEventListener('load', function () {
+    init()
+    animate()
+  })
+
+  function init () {
+    camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 10000)
+    camera.position.z = 0.3
+
+    scene = new THREE.Scene()
+    scene.add(camera)
+
+    // light = new THREE.DirectionalLight(0xffffff, 1)
+    // light.position.set( 0, 0.5, 0 )
+    // camera.add(light)
+    // camera.add(light.target)
+
+    light = new THREE.AmbientLight(0xffffff)
+    light.position.set(1, 1, 1)
+    camera.add(light)
+
+    // var light = new THREE.PointLight(0xffffff, 1, 100)
+    // light.position.set( 0, 0.1, 0 )
+    // scene.add(light)
+
+    // var material = new THREE.MeshBasicMaterial({
+    //   color: 0xffff00,
+    //   side: THREE.DoubleSide
+    // })
+
+    var material = new THREE.MeshLambertMaterial({
+      color: 0xff0000,
+      side: THREE.DoubleSide
+    })
+
+    var loader = new THREE.VTKLoader()
+
+    loader.load('models/bunny.vtk', function (content) {
+      var geometry = content
+      mesh = new THREE.Mesh(geometry, material)
+      mesh.position.setY(-0.1)
+      light.target = mesh
+      scene.add(mesh)
+    })
+
+    controls = new THREE.TrackballControls(camera)
+    controls.rotateSpeed = 5.0
+    controls.zoomSpeed = 5
+    controls.panSpeed = 2
+    controls.noZoom = false
+    controls.noPan = false
+    controls.staticMoving = true
+    controls.dynamicDampingFactor = 0.3
+
+    renderer = new THREE.WebGLRenderer({
+      antialias: false,
+      alpha: true
+    })
+
+    renderer.setClearColor(0x000000)
+    renderer.setSize(window.innerWidth, window.innerHeight)
+    container = document.createElement('div')
+    document.body.appendChild(container)
+    container.appendChild(renderer.domElement)
+
+
+    stats = new Stats()
+    stats.domElement.style.position = 'absolute'
+    stats.domElement.style.top = '0px'
+    container.appendChild(stats.domElement)
+  }
+
+  function animate () {
+    controls.update()
+    requestAnimationFrame(animate)
+    renderer.render(scene, camera)
+    stats.update()
+  }
+  </script>
+</body>
+</html>

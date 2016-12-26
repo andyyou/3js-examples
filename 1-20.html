@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css" integrity="sha384-AysaV+vQoT3kOAXZkl02PThvDr8HYKPZhNT5h/CXfBThSRXQ6jW5DO2ekP5ViFdi" crossorigin="anonymous">
+
+  <script src="javascripts/three.js"></script>
+  <script src="javascripts/detector.js"></script>
+  <script src="javascripts/stats.js"></script>
+  <script src="javascripts/dds-loader.js"></script>
+  <script src="javascripts/mtl-loader.js"></script>
+  <script src="javascripts/obj-loader.js"></script>
+  <script src="javascripts/trackball-controls.js"></script>
+  <title>Three.js</title>
+  <style>
+  html, body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  #product {
+    width: 100%;
+    height: 400px;
+    position: relative;
+  }
+
+  .container {
+    margin-top: 15px;
+  }
+  </style>
+</head>
+<body>
+  <div class="navbar navbar-dark bg-inverse">
+    <div class="container">
+      <a href="#" class="navbar-brand">Helmet</a>
+      <ul class="nav navbar-nav">
+        <li><a href="#" class="nav-link">About</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-6">
+        <div id="product"></div>
+      </div>
+      <div class="col-xs-6">
+        <button class="btn btn-default">材質 1</button>
+        <button class="btn btn-default">材質 2</button>
+        <button class="btn btn-default">材質 3</button>
+        <button class="btn btn-default">材質 4</button>
+      </div>
+    </div>
+  </div>
+  <script>
+  var container, renderer, camera, scene, light, stats, controls
+
+  var width, height
+  function init () {
+    stats = new Stats()
+    stats.domElement.style.position = 'fixed'
+    stats.domElement.style.bottom = '0px'
+    stats.domElement.style.right = '0px'
+
+    container = document.getElementById('product')
+    container.appendChild(stats.dom)
+    width = container.clientWidth
+    height = container.clientHeight
+
+    renderer = new THREE.WebGLRenderer()
+    renderer.setPixelRatio(window.devicePixelRatio)
+    renderer.setSize(width, height)
+    renderer.setClearColor(0xeeeeee, 1)
+    container.appendChild(renderer.domElement)
+
+    camera = new THREE.PerspectiveCamera(45, width/height, 1, 1e10)
+    camera.position.z = 10000
+
+    scene = new THREE.Scene()
+    scene.add(camera)
+
+    controls = new THREE.TrackballControls(camera)
+    controls.rotateSpeed = 5.0
+    controls.zoomSpeed = 5.0
+    controls.panSpeed = 2.0
+    controls.noZoom = false
+    controls.noPan = false
+    controls.staticMoving = true
+    controls.dynamicDampingFactor = 0.3
+
+    var ambient = new THREE.AmbientLight(0x444444)
+    scene.add(ambient)
+    light = new THREE.DirectionalLight(0xffffff, 1)
+    light.position.set(0, 0, 1).normalize()
+    camera.add(light)
+    camera.add(light.target)
+
+    // THREE.Loader.Handlers.add(/\.dds$/i, new THREE.DDSLoader())
+    var mtlLoader = new THREE.MTLLoader()
+    // mtlLoader.setPath('models/Helmet/')
+    mtlLoader.load('models/helmet.mtl', function (materials) {
+      materials.preload()
+      var objLoader = new THREE.OBJLoader()
+      objLoader.setMaterials(materials)
+      // objLoader.setPath('models/Helmet/')
+      objLoader.load('models/helmet.obj', function (object) {
+        object.position.y = -95
+        scene.add(object)
+        render()
+      }, function (xhr) {
+        if (xhr.lengthComputable) {
+          var percent = xhr.loaded / xhr.total * 100
+          console.log(Math.round(percent, 2) + '% completed')
+        }
+      }, function (xhr) {
+        console.error(xhr)
+      })
+    })
+
+  }
+
+  function animate () {
+    requestAnimationFrame(animate)
+    controls.update()
+    render()
+    stats.update()
+  }
+
+  function render () {
+    renderer.render(scene, camera)
+  }
+
+  window.addEventListener('load', function () {
+    init()
+    animate()
+  })
+  </script>
+</body>
+</html>

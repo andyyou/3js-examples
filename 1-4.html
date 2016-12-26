@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script src="javascripts/three.js"></script>
+  <title>Three.js</title>
+  <style>
+  body {
+    margin: 0;
+  }
+
+  #canvas-frame {
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    height: 800px;
+    background: #eee;
+  }
+  </style>
+</head>
+<body>
+  <div id="canvas-frame"></div>
+
+  <script>
+  var renderer, width, height
+
+  function initThree () {
+    var canvas = document.getElementById('canvas-frame')
+    width = canvas.clientWidth
+    height = canvas.clientHeight
+    renderer = new THREE.WebGLRenderer()
+    renderer.setSize(width, height)
+    renderer.setClearColor(0xffffff, 1.0)
+    canvas.appendChild(renderer.domElement)
+  }
+
+  var camera
+  function initCamera () {
+    camera = new THREE.PerspectiveCamera(70, width / height, 1, 10000)
+    camera.position.x = 0
+    camera.position.y = 1000
+    camera.position.z = 0
+    camera.lookAt({
+      x : 0,
+      y : 0,
+      z : 0
+    })
+  }
+
+  var scene
+  function initScene () {
+    scene = new THREE.Scene()
+  }
+
+  var light
+  function initLight () {
+    light = new THREE.DirectionalLight(0x000000, 1.0, 0)
+    light.position.set(100, 100, 200)
+    scene.add(light)
+    console.log('inited light')
+  }
+
+  function initObjects () {
+    var geometry = new THREE.Geometry()
+    geometry.vertices.push(new THREE.Vector3(-500, 0, 0))
+    geometry.vertices.push(new THREE.Vector3(500, 0, 0))
+
+    for (var i = 0; i <= 20; i++) {
+      var line = new THREE.Line(geometry, new THREE.LineBasicMaterial({
+        color: new THREE.Color( 0xff0000 ),
+        opacity: 1
+      }))
+      console.log(line.position)
+      line.position.z = i * 50 - 500
+
+      scene.add(line)
+
+      var line = new THREE.Line(geometry, new THREE.LineBasicMaterial({
+        color: 0x0000ff,
+        opacity: 1
+      }))
+      line.position.x = i * 50 - 500
+      line.rotation.y = 90 * Math.PI / 180
+
+      scene.add(line)
+    }
+  }
+
+  function start () {
+    initThree()
+    initCamera()
+    initScene()
+    initLight()
+    initObjects()
+    renderer.render(scene, camera)
+  }
+
+  window.addEventListener('load', function () {
+    console.log('start')
+    start()
+  })
+  </script>
+</body>
+</html>

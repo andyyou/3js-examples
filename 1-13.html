@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script src="javascripts/three.js"></script>
+  <title>Three.js</title>
+  <style>
+  body {
+    margin: 0;
+  }
+  </style>
+</head>
+<body>
+  <script>
+  var camera,
+      scene,
+      renderer,
+      mesh;
+  function init () {
+    textureLoader = new THREE.TextureLoader()
+
+    scene = new THREE.Scene()
+
+    camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 1, 1000)
+
+    var light = new THREE.DirectionalLight(0xffffff)
+    light.position.set(0, 1, 1)
+    scene.add(light)
+
+    var geometry = new THREE.BoxGeometry(10, 10, 10)
+    var loader = new THREE.TextureLoader()
+    var t1 = loader.load('textures/2.jpg')
+    var t2 = loader.load('textures/3.jpg')
+    var t3 = loader.load('textures/4.jpg')
+    var t4 = loader.load('textures/5.jpg')
+    var t5 = loader.load('textures/6.jpg')
+    var t6 = loader.load('textures/7.jpg')
+
+    var m1 = new THREE.MeshPhongMaterial({
+      map: t1
+    })
+    var m2 = new THREE.MeshPhongMaterial({
+      map: t2
+    })
+    var m3 = new THREE.MeshPhongMaterial({
+      map: t3
+    })
+    var m4 = new THREE.MeshPhongMaterial({
+      map: t4
+    })
+    var m5 = new THREE.MeshPhongMaterial({
+      map: t5
+    })
+    var m6 = new THREE.MeshPhongMaterial({
+      map: t6
+    })
+    var materials = [m1, m2, m3, m4, m5, m6]
+    var meshFaceMaterial = new THREE.MeshFaceMaterial(materials)
+    mesh = new THREE.Mesh(geometry, meshFaceMaterial)
+    mesh.position.z = -50
+    scene.add(mesh)
+    renderer = new THREE.WebGLRenderer()
+    renderer.setSize(window.innerWidth, window.innerHeight)
+    document.body.appendChild(renderer.domElement)
+
+    render()
+  }
+
+  function animate () {
+    mesh.rotation.x += .04
+    mesh.rotation.y += .02
+
+    render()
+    requestAnimationFrame(animate)
+  }
+
+  function render () {
+    renderer.render(scene, camera)
+  }
+
+  window.addEventListener('load', function () {
+    init()
+    animate()
+  })
+
+  </script>
+</body>
+</html>

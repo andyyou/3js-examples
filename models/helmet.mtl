@@ -1,0 +1,153 @@
+# Max2Mtl Version 4.0 Mar 10th, 2001
+#
+newmtl HELMBUB2
+Ka  0.0 0.0 0.0
+Kd  1.0 1.0 1.0
+Ks  1.0 1.0 1.0
+d  1.0
+Ns  10.0
+illum 2
+#
+newmtl HELMBUB1
+Ka  0.0 0.0 0.0
+Kd  0.8 0.8 0.8
+Ks  1.0 1.0 1.0
+d  1.0
+Ns  10.0
+illum 2
+#
+newmtl HELMSCRE
+Ka  0.0 0.0 0.0
+Kd  0.8 0.8 0.7
+Ks  1.0 1.0 1.0
+d  1.0
+Ns  10.0
+illum 2
+#
+newmtl HELMAIHO
+Ka  0.0 0.0 0.0
+Kd  0.1 0.1 0.1
+Ks  1.0 1.0 1.0
+d  1.0
+Ns  3.0
+illum 2
+#
+newmtl HELMOPE2
+Ka  0.0 0.0 0.0
+Kd  1.0 1.0 1.0
+Ks  1.0 1.0 1.0
+d  1.0
+Ns  10.0
+illum 2
+bump OPEN2-B.jpg
+#
+newmtl HELMOPE1
+Ka  0.0 0.0 0.0
+Kd  1.0 1.0 1.0
+Ks  1.0 1.0 1.0
+d  1.0
+Ns  10.0
+illum 2
+bump OPEN-B.jpg
+#
+newmtl HELMLEAT
+Ka  0.0 0.0 0.0
+Kd  0.2 0.2 0.2
+Ks  1.0 1.0 1.0
+d  1.0
+Ns  4.5
+illum 2
+#
+newmtl HELMINTE
+Ka  0.0 0.0 0.0
+Kd  0.2 0.2 0.2
+Ks  1.0 1.0 1.0
+d  1.0
+Ns  1.0
+illum 2
+bump -s 3.0 3.0 1.0 T-PAD.jpg
+#
+newmtl HELMBUBB
+Ka  0.0 0.0 0.0
+Kd  0.8 0.8 0.8
+Ks  1.0 1.0 1.0
+d  1.0
+Ns  10.0
+illum 2
+#
+newmtl HELMSHOE
+Ka  0.0 0.0 0.0
+Kd  1.0 1.0 1.0
+Ks  1.0 1.0 1.0
+d  1.0
+Ns  10.0
+illum 2
+bump SHOEI-TA.jpg
+#
+newmtl HELMTIES
+Ka  0.0 0.0 0.0
+Kd  0.8 0.8 0.8
+Ks  1.0 1.0 1.0
+d  1.0
+Ns  2.0
+illum 2
+#
+newmtl HELMCLA3
+Ka  0.0 0.0 0.0
+Kd  0.1 0.1 0.1
+Ks  1.0 1.0 1.0
+d  1.0
+Ns  7.0
+illum 2
+#
+newmtl HELMMET
+Ka  0.0 0.0 0.0
+Kd  1.0 1.0 1.0
+Ks  1.0 1.0 1.0
+d  1.0
+Ns  10.0
+illum 2
+#
+newmtl HELMREDB
+Ka  0.0 0.0 0.0
+Kd  0.8 0.2 0.2
+Ks  1.0 1.0 1.0
+d  1.0
+Ns  7.0
+illum 2
+#
+newmtl HELMPADS
+Ka  0.0 0.0 0.0
+Kd  0.4 0.4 0.4
+Ks  1.0 1.0 1.0
+d  1.0
+Ns  1.0
+illum 2
+bump T-PAD.jpg
+#
+newmtl HELMRUBB
+Ka  0.0 0.0 0.0
+Kd  0.0 0.0 0.0
+Ks  1.0 1.0 1.0
+d  1.0
+Ns  7.0
+illum 2
+#
+newmtl HELMVISO
+Ka  0.0 0.0 0.0
+Kd  0.3 0.4 0.3
+Ks  1.0 1.0 1.0
+d  0.6
+Ns  10.0
+illum 2
+#
+newmtl HELMBELT
+Ka  0.0 0.0 0.0
+Kd  0.1 0.1 0.1
+Ks  1.0 1.0 1.0
+d  1.0
+Ns  10.0
+illum 2
+bump c1.jpg
+#
+# EOF

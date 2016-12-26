@@ -53,10 +53,10 @@
 
   <div class="container">
     <div class="row">
-      <div class="col-xs-6">
+      <div class="col-sm-6">
         <div id="product"></div>
       </div>
-      <div class="col-xs-6">
+      <div class="col-sm-6">
         <a data-path="2.jpg" href="#">
           <img src="textures/2.jpg" class="img img-thumbnail">
         </a>
@@ -124,13 +124,13 @@
     var mtlLoader = new THREE.MTLLoader()
 
     mtlLoader.setPath('models/helmet/')
-    mtlLoader.load('helmet.mtl', function (materials) {
+    mtlLoader.load('Helmet.mtl', function (materials) {
       materials.preload()
       var objLoader = new THREE.OBJLoader(manager)
       objLoader.setMaterials(materials)
 
       objLoader.setPath('models/helmet/')
-      objLoader.load('helmet.obj', function (object) {
+      objLoader.load('Helmet.obj', function (object) {
         model = object
         object.position.y = -95
         object.traverse(function (child) {
